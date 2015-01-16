@@ -463,7 +463,7 @@
                         newDate.setMinutes(self._d.getMinutes());
                     }
                     self.setDate(newDate);
-                    if (opts.bound) {
+                    if (!opts.showTime && opts.bound) {
                         sto(function() {
                             self.hide();
                             if (opts.field) {
@@ -553,7 +553,10 @@
                     self.hide();
                 }, 50);
             }
-            self._c = false;
+
+            if (self._c !== true) {
+                self._c = false;
+            }
         };
 
         self._onClick = function(e)
@@ -565,6 +568,7 @@
                 return;
             }
             if (!hasEventListeners && hasClass(target, 'pika-select')) {
+            e = e || window.event;
                 if (!target.onchange) {
                     target.setAttribute('onchange', 'return;');
                     addEvent(target, 'change', self._onChange);
@@ -572,7 +576,8 @@
             }
             do {
                 if (pEl === opts.trigger ||
-                   (opts.showTime && hasClass(pEl, 'pika-time-container'))) {
+                   (opts.showTime && hasClass(pEl, 'pika-single'))) {
+                    self._c = true;
                     return;
                 }
             }
